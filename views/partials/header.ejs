@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | Stock Manager' : 'Stock Manager' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<% if (typeof isAuthenticated !== 'undefined' && isAuthenticated) { %>
+<div id="wrapper">
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
+      <span>Stock Manager</span>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">Main</div>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/dashboard' ? 'active' : '' %>" href="/dashboard">
+        <i class="bi bi-grid-1x2"></i> Dashboard
+      </a>
+
+      <div class="nav-section">Inventory</div>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/materials') ? 'active' : '' %>" href="/materials">
+        <i class="bi bi-box"></i> Materials
+      </a>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/stock/add' ? 'active' : '' %>" href="/stock/add">
+        <i class="bi bi-box-arrow-in-down"></i> Stock In
+      </a>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/stock/reduce' ? 'active' : '' %>" href="/stock/reduce">
+        <i class="bi bi-box-arrow-up"></i> Stock Out
+      </a>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/stock/history' ? 'active' : '' %>" href="/stock/history">
+        <i class="bi bi-clock-history"></i> History
+      </a>
+
+      <div class="nav-section">Analytics</div>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath.startsWith('/reports') ? 'active' : '' %>" href="/reports">
+        <i class="bi bi-bar-chart-line"></i> Reports
+      </a>
+
+      <div class="nav-section">Account</div>
+      <a class="nav-link <%= typeof currentPath !== 'undefined' && currentPath === '/profile' ? 'active' : '' %>" href="/profile">
+        <i class="bi bi-person"></i> Profile
+      </a>
+    </div>
+  </nav>
+
+  <div id="page-content">
+    <header class="topbar">
+      <button class="btn btn-ghost btn-icon d-lg-none" id="sidebarToggle" type="button">
+        <i class="bi bi-list fs-5"></i>
+      </button>
+      <h1 class="topbar-title d-none d-md-block"><%= typeof title !== 'undefined' ? title : '' %></h1>
+      <div class="topbar-search d-none d-md-block">
+        <i class="bi bi-search"></i>
+        <form action="/materials" method="GET">
+          <input type="text" name="search" placeholder="Search materials..." value="">
+        </form>
+      </div>
+      <div class="topbar-right">
+        <a href="/materials/add" class="btn btn-primary btn-sm d-none d-sm-inline-flex">
+          <i class="bi bi-plus-lg"></i> New Material
+        </a>
+        <div class="user-chip">
+          <div class="user-avatar"><%= (typeof adminName !== 'undefined' && adminName) ? adminName.charAt(0).toUpperCase() : 'A' %></div>
+          <span class="d-none d-sm-inline"><%= typeof adminName !== 'undefined' ? adminName : 'Admin' %></span>
+        </div>
+      </div>
+    </header>
+    <main class="page-body">
+<% } %>

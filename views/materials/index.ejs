@@ -1,0 +1,111 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <span>Materials</span></div>
+    <h1>Materials</h1>
+    <p class="subtitle">Manage your inventory catalog</p>
+  </div>
+  <a href="/materials/add" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Material</a>
+</div>
+
+<% if (success) { %><div class="alert alert-success"><i class="bi bi-check-circle me-1"></i> <%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> <%= error %></div><% } %>
+
+<div class="filter-bar">
+  <form method="GET" action="/materials" class="row g-2 align-items-end">
+    <div class="col-12 col-md-3">
+      <label class="form-label">Search</label>
+      <input type="text" name="search" class="form-control form-control-sm" placeholder="Name, code, category..." value="<%= filters.search || '' %>">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">Category</label>
+      <input type="text" name="category" class="form-control form-control-sm" placeholder="Any" value="<%= filters.category || '' %>">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">Status</label>
+      <select name="status" class="form-select form-select-sm">
+        <option value="">All</option>
+        <option value="available" <%= filters.status === 'available' ? 'selected' : '' %>>Available</option>
+        <option value="low" <%= filters.status === 'low' ? 'selected' : '' %>>Low Stock</option>
+        <option value="out" <%= filters.status === 'out' ? 'selected' : '' %>>Out of Stock</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">Sort</label>
+      <select name="sort" class="form-select form-select-sm">
+        <option value="">Newest</option>
+        <option value="name" <%= filters.sort === 'name' ? 'selected' : '' %>>Name</option>
+        <option value="code" <%= filters.sort === 'code' ? 'selected' : '' %>>Code</option>
+        <option value="quantity" <%= filters.sort === 'quantity' ? 'selected' : '' %>>Qty ↑</option>
+        <option value="quantity_desc" <%= filters.sort === 'quantity_desc' ? 'selected' : '' %>>Qty ↓</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-funnel"></i> Filter</button>
+      <a href="/materials" class="btn btn-ghost btn-sm">Reset</a>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="panel-body p-0">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Material</th>
+            <th class="d-none d-md-table-cell">Category</th>
+            <th>Qty</th>
+            <th class="d-none d-sm-table-cell">Unit</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!materials || materials.length === 0) { %>
+            <tr>
+              <td colspan="7">
+                <div class="empty-state">
+                  <i class="bi bi-box"></i>
+                  <h3>No materials found</h3>
+                  <p>Add your first material to start tracking stock.</p>
+                  <a href="/materials/add" class="btn btn-primary btn-sm">Add Material</a>
+                </div>
+              </td>
+            </tr>
+          <% } else { %>
+            <% materials.forEach(function(m) { %>
+              <% 
+                var badge = 'badge-available', statusText = 'Available';
+                if (m.quantity <= 0) { badge = 'badge-out'; statusText = 'Out of Stock'; }
+                else if (m.quantity <= m.minimumStock) { badge = 'badge-low'; statusText = 'Low Stock'; }
+              %>
+              <tr>
+                <td><span class="item-code"><%= m.code %></span></td>
+                <td>
+                  <a href="/materials/view/<%= m._id %>" class="item-name"><%= m.name %></a>
+                  <% if (m.location) { %><div class="small text-muted"><i class="bi bi-geo-alt"></i> <%= m.location %></div><% } %>
+                </td>
+                <td class="d-none d-md-table-cell text-muted"><%= m.category %></td>
+                <td><strong><%= m.quantity %></strong></td>
+                <td class="d-none d-sm-table-cell text-muted"><%= m.unit %></td>
+                <td><span class="badge-status <%= badge %>"><%= statusText %></span></td>
+                <td class="text-end text-nowrap">
+                  <a href="/materials/view/<%= m._id %>" class="btn btn-ghost btn-icon" title="View"><i class="bi bi-eye"></i></a>
+                  <a href="/materials/edit/<%= m._id %>" class="btn btn-ghost btn-icon" title="Edit"><i class="bi bi-pencil"></i></a>
+                  <form method="POST" action="/materials/delete/<%= m._id %>" class="d-inline" onsubmit="return confirm('Delete this material?');">
+                    <button type="submit" class="btn btn-ghost btn-icon text-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,99 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <span>Stock In</span></div>
+    <h1>Stock In</h1>
+    <p class="subtitle">Receive materials and increase stock quantity</p>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="panel">
+      <div class="panel-header"><h2>Receive Stock</h2></div>
+      <div class="panel-body">
+        <% if (error) { %><div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> <%= error %></div><% } %>
+        <% if (success) { %><div class="alert alert-success"><i class="bi bi-check-circle me-1"></i> <%= success %></div><% } %>
+        <% if (!materials || materials.length === 0) { %>
+          <div class="alert alert-warning">No materials yet. <a href="/materials/add" class="alert-link">Add a material first</a>.</div>
+        <% } %>
+        <form method="POST" action="/stock/add" autocomplete="off">
+          <div class="mb-3">
+            <label class="form-label">Material Code <span class="text-danger">*</span></label>
+            <input type="text" name="materialCode" id="materialCode" class="form-control form-control-lg"
+                   list="materialCodeList" placeholder="Type code e.g. MAT-001"
+                   value="<%= form.materialCode || '' %>" required>
+            <datalist id="materialCodeList">
+              <% (materials || []).forEach(function(m) { %>
+                <option value="<%= m.code %>"><%= m.name %> — <%= m.quantity %> <%= m.unit %></option>
+              <% }); %>
+            </datalist>
+            <div id="materialInfo" class="form-text mt-1"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Quantity Received <span class="text-danger">*</span></label>
+            <input type="number" name="quantity" class="form-control" min="1" value="<%= form.quantity || '' %>" placeholder="e.g. 50" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Supplier</label>
+            <input type="text" name="supplier" class="form-control" value="<%= form.supplier || '' %>" placeholder="Supplier name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Reference / PO Number</label>
+            <input type="text" name="referenceNumber" class="form-control" value="<%= form.referenceNumber || '' %>" placeholder="PO-12345">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Remarks</label>
+            <textarea name="remarks" class="form-control" rows="2"><%= form.remarks || '' %></textarea>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Confirm Stock In</button>
+            <a href="/dashboard" class="btn btn-ghost">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel">
+      <div class="panel-header"><h2>Materials reference</h2>
+        <a href="/materials/add" class="btn btn-ghost btn-sm"><i class="bi bi-plus"></i> New</a>
+      </div>
+      <div class="panel-body p-0">
+        <% if (!materials || materials.length === 0) { %>
+          <div class="empty-state"><i class="bi bi-box"></i><h3>No materials</h3><p>Add materials to receive stock against them.</p></div>
+        <% } else { %>
+          <div class="table-responsive" style="max-height:420px;overflow-y:auto">
+            <table class="data-table">
+              <thead><tr><th>Code</th><th>Name</th><th>Stock</th></tr></thead>
+              <tbody>
+                <% materials.forEach(function(m) { %>
+                  <tr style="cursor:pointer" onclick="pickCode('<%= m.code %>')">
+                    <td><span class="item-code"><%= m.code %></span></td>
+                    <td class="item-name"><%= m.name %></td>
+                    <td><%= m.quantity %> <span class="text-muted"><%= m.unit %></span></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var materialMap = {<% (materials||[]).forEach(function(m){ %>"<%= m.code %>":{name:"<%= String(m.name).replace(/"/g,'\\"') %>",qty:<%= m.quantity %>,unit:"<%= m.unit %>"},<% }); %>};
+  function pickCode(c){ document.getElementById('materialCode').value=c; showInfo(c); }
+  function showInfo(code){
+    var el=document.getElementById('materialInfo');
+    var m=materialMap[(code||'').toUpperCase()];
+    el.innerHTML = m ? '<strong>'+m.name+'</strong> — current stock: <strong>'+m.qty+' '+m.unit+'</strong>' : '';
+  }
+  document.getElementById('materialCode').addEventListener('input', function(){ showInfo(this.value.trim()); });
+  if(document.getElementById('materialCode').value) showInfo(document.getElementById('materialCode').value);
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <a href="/materials">Materials</a> / <span>Edit</span></div>
+    <h1>Edit Material</h1>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="panel"><div class="panel-body">
+      <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+      <form method="POST" action="/materials/edit/<%= material._id %>">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Material Name *</label><input type="text" name="name" class="form-control" value="<%= material.name %>" required></div>
+          <div class="col-md-6"><label class="form-label">Code / SKU *</label><input type="text" name="code" class="form-control" value="<%= material.code %>" required></div>
+          <div class="col-md-6"><label class="form-label">Category *</label><input type="text" name="category" class="form-control" value="<%= material.category %>" required></div>
+          <div class="col-md-6"><label class="form-label">Unit *</label><input type="text" name="unit" class="form-control" value="<%= material.unit %>" required></div>
+          <div class="col-md-6"><label class="form-label">Current Quantity</label><input type="number" class="form-control" value="<%= material.quantity %>" disabled><div class="form-text">Use Stock In / Stock Out to change quantity.</div></div>
+          <div class="col-md-6"><label class="form-label">Minimum Stock *</label><input type="number" name="minimumStock" class="form-control" value="<%= material.minimumStock %>" min="0" required></div>
+          <div class="col-md-6"><label class="form-label">Location</label><input type="text" name="location" class="form-control" value="<%= material.location || '' %>"></div>
+          <div class="col-md-6"><label class="form-label">Supplier Name</label><input type="text" name="supplierName" class="form-control" value="<%= material.supplierName || '' %>"></div>
+          <div class="col-md-6"><label class="form-label">Supplier Contact</label><input type="text" name="supplierContact" class="form-control" value="<%= material.supplierContact || '' %>"></div>
+          <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="2"><%= material.description || '' %></textarea></div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Update</button>
+          <a href="/materials" class="btn btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div></div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

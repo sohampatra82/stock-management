@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <span>History</span></div>
+    <h1>Transaction History</h1>
+    <p class="subtitle">Complete audit trail of stock movements</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <form method="GET" action="/stock/history" class="row g-2 align-items-end">
+    <div class="col-12 col-md-4">
+      <label class="form-label">Search</label>
+      <input type="text" name="search" class="form-control form-control-sm" placeholder="Material, code, issued to..." value="<%= filters.search || '' %>">
+    </div>
+    <div class="col-6 col-md-3">
+      <label class="form-label">Type</label>
+      <select name="type" class="form-select form-select-sm">
+        <option value="">All</option>
+        <option value="STOCK_IN" <%= filters.type === 'STOCK_IN' ? 'selected' : '' %>>Stock In</option>
+        <option value="STOCK_OUT" <%= filters.type === 'STOCK_OUT' ? 'selected' : '' %>>Stock Out</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-funnel"></i> Filter</button>
+      <a href="/stock/history" class="btn btn-ghost btn-sm">Reset</a>
+    </div>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="panel-body p-0">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Material</th>
+            <th>Type</th>
+            <th>Qty</th>
+            <th class="d-none d-md-table-cell">Previous</th>
+            <th class="d-none d-md-table-cell">New</th>
+            <th class="d-none d-lg-table-cell">Party</th>
+            <th class="d-none d-xl-table-cell">By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!transactions || transactions.length === 0) { %>
+            <tr><td colspan="8"><div class="empty-state"><i class="bi bi-clock-history"></i><h3>No transactions</h3><p>Stock movements will be listed here.</p></div></td></tr>
+          <% } else { %>
+            <% transactions.forEach(function(t) { %>
+              <tr>
+                <td class="text-nowrap text-muted small"><%= new Date(t.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) %></td>
+                <td><div class="item-name"><%= t.materialName %></div><span class="item-code"><%= t.materialCode %></span></td>
+                <td>
+                  <% if (t.type === 'STOCK_IN') { %><span class="badge-status badge-in">Stock In</span>
+                  <% } else { %><span class="badge-status badge-out-tx">Stock Out</span><% } %>
+                </td>
+                <td><strong><%= t.quantity %></strong></td>
+                <td class="d-none d-md-table-cell text-muted"><%= t.previousQuantity %></td>
+                <td class="d-none d-md-table-cell"><%= t.newQuantity %></td>
+                <td class="d-none d-lg-table-cell small"><%= t.type === 'STOCK_IN' ? (t.supplier || '—') : (t.issuedTo || '—') %></td>
+                <td class="d-none d-xl-table-cell small text-muted"><%= t.performedByName || 'Admin' %></td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

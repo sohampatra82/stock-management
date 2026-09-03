@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <span>Reports</span></div>
+    <h1>Reports</h1>
+    <p class="subtitle">Stock and transaction reports with CSV export</p>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100"><div class="panel-body">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="stat-icon-wrap stat-icon-blue"><i class="bi bi-box"></i></div>
+        <h2 class="mb-0" style="font-size:15px">Current Stock</h2>
+      </div>
+      <p class="text-muted small">All materials with quantities and status.</p>
+      <a href="/reports/stock" class="btn btn-primary btn-sm">Open report</a>
+    </div></div>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100"><div class="panel-body">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="stat-icon-wrap stat-icon-green"><i class="bi bi-box-arrow-in-down"></i></div>
+        <h2 class="mb-0" style="font-size:15px">Stock In</h2>
+      </div>
+      <p class="text-muted small">All stock receipt transactions.</p>
+      <a href="/reports/transactions?type=STOCK_IN" class="btn btn-success btn-sm">Open report</a>
+    </div></div>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100"><div class="panel-body">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="stat-icon-wrap stat-icon-red"><i class="bi bi-box-arrow-up"></i></div>
+        <h2 class="mb-0" style="font-size:15px">Stock Out</h2>
+      </div>
+      <p class="text-muted small">All stock issue transactions.</p>
+      <a href="/reports/transactions?type=STOCK_OUT" class="btn btn-danger btn-sm">Open report</a>
+    </div></div>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100"><div class="panel-body">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="stat-icon-wrap stat-icon-amber"><i class="bi bi-exclamation-triangle"></i></div>
+        <h2 class="mb-0" style="font-size:15px">Low Stock</h2>
+      </div>
+      <p class="text-muted small">Items at or below minimum level.</p>
+      <a href="/reports/stock?status=low" class="btn btn-warning btn-sm">Open report</a>
+    </div></div>
+  </div>
+  <div class="col-md-6 col-lg-4">
+    <div class="panel h-100"><div class="panel-body">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="stat-icon-wrap stat-icon-blue"><i class="bi bi-clock-history"></i></div>
+        <h2 class="mb-0" style="font-size:15px">All Transactions</h2>
+      </div>
+      <p class="text-muted small">Full history with date filters &amp; CSV.</p>
+      <a href="/reports/transactions" class="btn btn-primary btn-sm">Open report</a>
+    </div></div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

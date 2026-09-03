@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <a href="/materials">Materials</a> / <span>Add</span></div>
+    <h1>Add Material</h1>
+    <p class="subtitle">Enter material details — all fields are free text</p>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="panel">
+      <div class="panel-body">
+        <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+        <form method="POST" action="/materials/add" autocomplete="off">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Material Name <span class="text-danger">*</span></label>
+              <input type="text" name="name" class="form-control" value="<%= material.name || '' %>" placeholder="e.g. A4 Paper" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Material Code / SKU <span class="text-danger">*</span></label>
+              <input type="text" name="code" class="form-control" value="<%= material.code || '' %>" placeholder="e.g. MAT-001" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Category <span class="text-danger">*</span></label>
+              <input type="text" name="category" class="form-control" value="<%= material.category || '' %>" placeholder="e.g. Stationery" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Unit <span class="text-danger">*</span></label>
+              <input type="text" name="unit" class="form-control" value="<%= material.unit || '' %>" placeholder="Box, Pcs, Kg..." required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Initial Quantity</label>
+              <input type="number" name="quantity" class="form-control" value="<%= material.quantity != null ? material.quantity : 0 %>" min="0">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Minimum Stock Level <span class="text-danger">*</span></label>
+              <input type="number" name="minimumStock" class="form-control" value="<%= material.minimumStock != null ? material.minimumStock : 0 %>" min="0" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Location</label>
+              <input type="text" name="location" class="form-control" value="<%= material.location || '' %>" placeholder="Warehouse A / Shelf 3">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Supplier Name</label>
+              <input type="text" name="supplierName" class="form-control" value="<%= material.supplierName || '' %>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Supplier Contact</label>
+              <input type="text" name="supplierContact" class="form-control" value="<%= material.supplierContact || '' %>">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="2"><%= material.description || '' %></textarea>
+            </div>
+          </div>
+          <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save Material</button>
+            <a href="/materials" class="btn btn-ghost">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
