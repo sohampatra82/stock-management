@@ -8,6 +8,14 @@ const adminSchema = new mongoose.Schema(
       required: [true, 'Name is required'],
       trim: true
     },
+    username: {
+      type: String,
+      required: [true, 'Username is required'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      minlength: [3, 'Username must be at least 3 characters']
+    },
     email: {
       type: String,
       required: [true, 'Email is required'],

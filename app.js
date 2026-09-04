@@ -21,18 +21,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'material-stock-secret-key',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }
 }));
 
+// Make session data available to all views
 app.use((req, res, next) => {
-  if (!req.session.adminName) {
-    req.session.adminName = 'Admin';
-    req.session.adminEmail = 'admin@example.com';
-  }
-  res.locals.adminName = req.session.adminName;
-  res.locals.adminEmail = req.session.adminEmail;
-  res.locals.isAuthenticated = true;
+  res.locals.adminName = req.session.adminName || null;
+  res.locals.adminEmail = req.session.adminEmail || null;
+  res.locals.adminUsername = req.session.adminUsername || null;
+  res.locals.isAuthenticated = !!(req.session && req.session.isAuthenticated);
   res.locals.currentPath = req.path;
   next();
 });
@@ -42,7 +40,14 @@ app.get('/dashboard', requireAuth, dashboardController.getDashboard);
 app.use('/materials', require('./routes/materialRoutes'));
 app.use('/stock', require('./routes/stockRoutes'));
 app.use('/reports', require('./routes/reportRoutes'));
-app.get('/', (req, res) => res.redirect('/dashboard'));
+
+// Root: redirect based on auth
+app.get('/', (req, res) => {
+  if (req.session && req.session.isAuthenticated) {
+    return res.redirect('/dashboard');
+  }
+  return res.redirect('/login');
+});
 
 app.use((req, res) => {
   res.status(404).render('error', {
@@ -64,5 +69,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('Material Stock Management running at http://localhost:' + PORT);
-  console.log('No login required — open dashboard directly.');
+  console.log('Login with Username: admin  |  Password: admin123');
 });

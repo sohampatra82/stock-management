@@ -1,47 +1,91 @@
 <%- include('partials/header') %>
 
-<div class="row justify-content-center">
+<div class="page-header">
+  <div>
+    <div class="breadcrumb-nav"><a href="/dashboard">Home</a> / <span>Profile</span></div>
+    <h1>My Profile</h1>
+    <p class="subtitle">Manage your account details and password</p>
+  </div>
+</div>
+
+<div class="row g-4">
   <div class="col-lg-6">
-    <div class="card border-0 shadow-sm">
-      <div class="card-header bg-white">
-        <h5 class="mb-0"><i class="bi bi-person-circle me-2"></i>Admin Profile</h5>
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom">
+        <h5 class="mb-0"><i class="bi bi-person-circle me-2 text-primary"></i>Account Information</h5>
       </div>
       <div class="card-body">
-        <% if (success) { %>
-          <div class="alert alert-success"><i class="bi bi-check-circle me-1"></i> <%= success %></div>
+        <% if (success && !error) { %>
+          <div class="alert alert-success alert-dismissible fade show py-2">
+            <i class="bi bi-check-circle me-1"></i> <%= success %>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+          </div>
         <% } %>
-        <% if (error) { %>
-          <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> <%= error %></div>
+        <% if (error && !success) { %>
+          <div class="alert alert-danger alert-dismissible fade show py-2">
+            <i class="bi bi-exclamation-triangle me-1"></i> <%= error %>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+          </div>
         <% } %>
+        <% if (success && error) { %>
+          <div class="alert alert-success alert-dismissible fade show py-2">
+            <i class="bi bi-check-circle me-1"></i> <%= success %>
+            <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+          </div>
+        <% } %>
+
         <form method="POST" action="/profile">
           <div class="mb-3">
-            <label class="form-label">Name <span class="text-danger">*</span></label>
-            <input type="text" name="name" class="form-control" value="<%= admin.name %>" required>
+            <label class="form-label fw-semibold">Username</label>
+            <input type="text" class="form-control bg-light" value="<%= admin.username || '' %>" disabled>
+            <div class="form-text">Username cannot be changed.</div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" value="<%= admin.email %>" disabled>
-            <div class="form-text">Email cannot be changed.</div>
+            <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control" value="<%= admin.name || '' %>" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Phone</label>
-            <input type="text" name="phone" class="form-control" value="<%= admin.phone || '' %>">
-          </div>
-          <hr>
-          <h6 class="mb-3">Change Password</h6>
-          <div class="mb-3">
-            <label class="form-label">Current Password</label>
-            <input type="password" name="currentPassword" class="form-control">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="email" class="form-control" value="<%= admin.email || '' %>">
           </div>
           <div class="mb-3">
-            <label class="form-label">New Password</label>
-            <input type="password" name="newPassword" class="form-control" minlength="6">
+            <label class="form-label fw-semibold">Phone</label>
+            <input type="text" name="phone" class="form-control" value="<%= admin.phone || '' %>" placeholder="Optional">
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i> Save Changes
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom">
+        <h5 class="mb-0"><i class="bi bi-shield-lock me-2 text-primary"></i>Change Password</h5>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">
+          For security, change the default password after first login.
+        </p>
+        <form method="POST" action="/profile/change-password">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Current Password <span class="text-danger">*</span></label>
+            <input type="password" name="currentPassword" class="form-control" required autocomplete="current-password">
           </div>
           <div class="mb-3">
-            <label class="form-label">Confirm New Password</label>
-            <input type="password" name="confirmPassword" class="form-control" minlength="6">
+            <label class="form-label fw-semibold">New Password <span class="text-danger">*</span></label>
+            <input type="password" name="newPassword" class="form-control" minlength="6" required autocomplete="new-password">
+            <div class="form-text">Minimum 6 characters.</div>
           </div>
-          <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> Update Profile</button>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Confirm New Password <span class="text-danger">*</span></label>
+            <input type="password" name="confirmPassword" class="form-control" minlength="6" required autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-warning">
+            <i class="bi bi-key me-1"></i> Update Password
+          </button>
         </form>
       </div>
     </div>

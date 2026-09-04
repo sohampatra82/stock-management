@@ -58,7 +58,13 @@ A complete Material Stock / Inventory Management System built with Node.js, Expr
 
 5. Open **http://localhost:3000**
 
-   You go straight to the Dashboard — **no login**.
+   **Demo Admin Login**
+   - Username: `admin`
+   - Password: `admin123`
+
+   After login you can change the password from Profile → Change Password.
+
+   Login page is enabled. Use demo credentials below.
 
 ## Main Routes
 

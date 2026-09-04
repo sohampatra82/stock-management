@@ -7,20 +7,30 @@ const seedAdmin = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
 
+    const username = 'admin';
     const email = 'admin@example.com';
-    const existing = await Admin.findOne({ email });
+    const existing = await Admin.findOne({ $or: [{ username }, { email }] });
 
     if (existing) {
-      console.log('Admin account already exists:');
-      console.log(`  Email: ${email}`);
-      console.log('  (Password remains unchanged)');
+      existing.password = 'admin123';
+      existing.username = username;
+      existing.name = existing.name || 'System Admin';
+      await existing.save();
+      console.log('========================================');
+      console.log('Admin account updated / already exists:');
+      console.log('========================================');
+      console.log(`  Username: ${username}`);
+      console.log(`  Email:    ${email}`);
+      console.log(`  Password: admin123`);
+      console.log('========================================');
       process.exit(0);
     }
 
     const admin = await Admin.create({
       name: 'System Admin',
+      username,
       email,
-      password: 'Admin@123',
+      password: 'admin123',
       phone: ''
     });
 
@@ -28,10 +38,11 @@ const seedAdmin = async () => {
     console.log('Default Admin account created successfully!');
     console.log('========================================');
     console.log(`  Name:     ${admin.name}`);
+    console.log(`  Username: ${username}`);
     console.log(`  Email:    ${email}`);
-    console.log(`  Password: Admin@123`);
+    console.log(`  Password: admin123`);
     console.log('========================================');
-    console.log('IMPORTANT: Change this password immediately after first login.');
+    console.log('IMPORTANT: Change this password after first login.');
     console.log('========================================');
 
     process.exit(0);
